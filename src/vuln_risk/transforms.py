@@ -219,10 +219,10 @@ KEV_RISK_RANKED_COLUMNS = [
 VENDOR_SUMMARY_COLUMNS = [
     ("vendor_project", "STRING", "Vendor or project name as listed by CISA."),
     ("exploited_vuln_count", "BIGINT", "Number of CVEs for this vendor in the KEV catalog."),
-    ("avg_epss_score", "DOUBLE", "Average EPSS score of this vendor's KEV CVEs (CVEs without a score are ignored)."),
-    ("max_epss_score", "DOUBLE", "Highest EPSS score among this vendor's KEV CVEs."),
-    ("ransomware_vuln_count", "BIGINT", "Number of this vendor's KEV CVEs with known ransomware use."),
-    ("past_due_count", "BIGINT", "Number of this vendor's KEV CVEs past the CISA due date."),
+    ("avg_epss_score", "DOUBLE", "Average EPSS score of KEV CVEs for this vendor (CVEs without a score are ignored)."),
+    ("max_epss_score", "DOUBLE", "Highest EPSS score among KEV CVEs for this vendor."),
+    ("ransomware_vuln_count", "BIGINT", "Number of KEV CVEs for this vendor with known ransomware use."),
+    ("past_due_count", "BIGINT", "Number of KEV CVEs for this vendor past the CISA due date."),
     ("latest_date_added", "DATE", "Most recent date a CVE for this vendor was added to KEV."),
 ]
 
