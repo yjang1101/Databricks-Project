@@ -8,7 +8,9 @@ from pyspark.sql import functions as F
 from vuln_risk import config as cfg
 from vuln_risk import transforms as T
 
-AS_OF = F.to_date(F.lit("2024-02-01"))  # fixed "today" for deterministic tests
+def as_of():
+    """Fixed "today" for deterministic tests (built lazily: needs an active SparkSession)."""
+    return F.to_date(F.lit("2024-02-01"))
 
 
 # ---------------------------------------------------------------- helpers ---
@@ -152,7 +154,7 @@ def test_epss_quality_rules(epss_bronze):
 # ------------------------------------------------------------------- gold ---
 
 def test_kev_risk_ranked(kev_silver, epss_silver):
-    ranked = T.build_kev_risk_ranked(kev_silver, epss_silver, as_of_date=AS_OF)
+    ranked = T.build_kev_risk_ranked(kev_silver, epss_silver, as_of_date=as_of())
     rows = by_cve(ranked)
 
     assert len(rows) == 3  # every silver KEV CVE, even without an EPSS score
@@ -168,7 +170,7 @@ def test_kev_risk_ranked(kev_silver, epss_silver):
 
 
 def test_vendor_summary(kev_silver, epss_silver):
-    ranked = T.build_kev_risk_ranked(kev_silver, epss_silver, as_of_date=AS_OF)
+    ranked = T.build_kev_risk_ranked(kev_silver, epss_silver, as_of_date=as_of())
     rows = {r["vendor_project"]: r for r in T.build_vendor_summary(ranked).collect()}
 
     # Acme: CVE-2024-0001 (EPSS 0.97, ransomware, due 2024-01-31 -> past due)
@@ -196,7 +198,7 @@ def test_gold_output_matches_declared_schema(spark, kev_silver, epss_silver, bui
     """The pipeline declares gold schemas (with comments) from these column lists.
     If the transformation drifts from the declaration, the pipeline would fail -
     catch that here instead."""
-    ranked = T.build_kev_risk_ranked(kev_silver, epss_silver, as_of_date=AS_OF)
+    ranked = T.build_kev_risk_ranked(kev_silver, epss_silver, as_of_date=as_of())
     df = ranked if builder == "kev_risk_ranked" else T.build_vendor_summary(ranked)
 
     actual = [(f.name, f.dataType.simpleString()) for f in df.schema.fields]
