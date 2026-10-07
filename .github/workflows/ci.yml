@@ -10,15 +10,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
 
       # PySpark needs a JVM.
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
@@ -30,4 +30,14 @@ jobs:
         run: ruff check src tests
 
       - name: Unit tests
-        run: pytest -v
+        run: |
+          set -o pipefail
+          pytest -v 2>&1 | tee pytest-output.txt
+
+      # Show the end of the pytest output as an annotation on the run summary
+      # page, so failures are visible without opening the full log.
+      - name: Report test failures
+        if: failure()
+        run: |
+          summary=$(tail -n 60 pytest-output.txt | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
+          echo "::error title=pytest failed::${summary}"
