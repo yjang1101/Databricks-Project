@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+.idea/
+.vscode/
+.DS_Store
+spark-warehouse/
+metastore_db/
+derby.log
+
+# Databricks bundle local state
+.databricks/
+
+# Never commit downloaded source data
+data/
+*.csv
+*.csv.gz

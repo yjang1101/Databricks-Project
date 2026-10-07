@@ -1,0 +1,23 @@
+# Databricks bundle (Declarative Automation Bundles, formerly Asset Bundles).
+# Defines the pipeline and the daily job. Deploy it from the workspace UI
+# (open this file in your Git folder -> Deployments -> Deploy) or with the CLI:
+#   databricks bundle deploy && databricks bundle run vuln_risk_daily
+bundle:
+  name: vuln-risk-lakehouse
+
+include:
+  - resources/*.yml
+
+variables:
+  catalog:
+    description: Unity Catalog catalog holding the raw/bronze/silver/gold schemas.
+    default: vuln_risk
+  landing_path:
+    description: Volume folder that contains the kev/ and epss/ sub-folders.
+    default: /Volumes/vuln_risk/raw/landing
+
+targets:
+  # Single target: Free Edition has one workspace. No `mode: development`,
+  # because development mode pauses schedules and we want the job to run daily.
+  free:
+    default: true

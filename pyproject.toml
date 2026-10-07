@@ -1,0 +1,14 @@
+[project]
+name = "vuln-risk-lakehouse"
+version = "0.1.0"
+description = "CISA KEV + FIRST EPSS vulnerability risk lakehouse on Databricks (Lakeflow Declarative Pipelines)"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 120
+src = ["src", "tests"]

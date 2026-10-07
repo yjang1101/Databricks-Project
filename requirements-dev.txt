@@ -1,0 +1,4 @@
+# Local development and CI only. Databricks serverless already provides PySpark.
+pyspark==4.0.1
+pytest==8.4.2
+ruff==0.13.3

@@ -1,0 +1,20 @@
+# Lakeflow Declarative Pipeline (formerly Delta Live Tables).
+# Paths are relative to this file.
+resources:
+  pipelines:
+    vuln_risk_pipeline:
+      name: vuln-risk-lakehouse-pipeline
+      serverless: true          # Free Edition supports serverless only
+      continuous: false         # triggered by the daily job
+      channel: CURRENT
+      catalog: ${var.catalog}   # default catalog/schema; tables use fully qualified names
+      schema: bronze
+      root_path: ../src         # added to sys.path, so `import vuln_risk` works
+      libraries:
+        - glob:
+            include: ../src/pipeline/**
+      configuration:
+        vuln_risk.catalog: ${var.catalog}
+        vuln_risk.landing_path: ${var.landing_path}
+        # Fallback for the import path in case root_path is not applied.
+        vuln_risk.src_path: ${workspace.file_path}/src
